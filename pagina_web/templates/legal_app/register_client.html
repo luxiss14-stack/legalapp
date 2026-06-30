@@ -1,0 +1,33 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+Register Client
+{% endblock %}
+
+{% block content %}
+
+<h1>Client Registration</h1>
+
+<p style="margin:20px 0;">
+    Complete the following form to register a new client.
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Register Client
+    </button>
+
+</form>
+
+<hr style="margin:40px 0;">
+
+<a href="{% url 'client_list' %}">
+    ← Back to Clients
+</a>
+
+{% endblock %}

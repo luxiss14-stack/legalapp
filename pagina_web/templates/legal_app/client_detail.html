@@ -1,0 +1,72 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+{{ client.name }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ client.name }}</h1>
+
+<div class="card">
+
+    <p><strong>Phone:</strong> {{ client.phone }}</p>
+
+    <p><strong>Email:</strong> {{ client.email }}</p>
+
+</div>
+
+<div style="margin-top:30px;">
+
+    <a href="{% url 'create_issue' client.id %}">
+        <button>Create New Issue</button>
+    </a>
+
+</div>
+
+<hr style="margin:30px 0;">
+
+<h2>Legal Issues</h2>
+
+{% if issues %}
+
+    {% for issue in issues %}
+
+        <div class="card">
+
+            <h3>{{ issue.title }}</h3>
+
+            <p>
+                <strong>Created:</strong>
+                {{ issue.created_at }}
+            </p>
+
+            <p>
+                {{ issue.description|truncatewords:35 }}
+            </p>
+
+            <a href="{% url 'issue_detail' issue.id %}">
+                <button>Open Issue</button>
+            </a>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="card">
+
+        <p>This client has not submitted any legal issues yet.</p>
+
+    </div>
+
+{% endif %}
+
+<br>
+
+<a href="{% url 'client_list' %}">
+    <button>Back to Clients</button>
+</a>
+
+{% endblock %}

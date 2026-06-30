@@ -1,0 +1,86 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+Legal Management System
+{% endblock %}
+
+{% block content %}
+
+<h1>Legal Case Management System</h1>
+
+<p style="margin-top:20px;">
+    Welcome to the Legal Management System.
+    This application allows clients to register, submit legal issues,
+    and communicate directly with assigned lawyers through a chat interface.
+</p>
+
+<hr style="margin:30px 0;">
+
+<h2>Quick Actions</h2>
+
+<div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:20px;">
+
+    <div class="card" style="width:300px;">
+        <h3>Register a Client</h3>
+
+        <p style="margin:15px 0;">
+            Create a new client profile with contact information.
+        </p>
+
+        <a href="{% url 'register_client' %}">
+            <button>Register Client</button>
+        </a>
+    </div>
+
+    <div class="card" style="width:300px;">
+        <h3>Register a Lawyer</h3>
+
+        <p style="margin:15px 0;">
+            Add a lawyer to the system.
+        </p>
+
+        <a href="{% url 'register_lawyer' %}">
+            <button>Register Lawyer</button>
+        </a>
+    </div>
+
+    <div class="card" style="width:300px;">
+        <h3>View Clients</h3>
+
+        <p style="margin:15px 0;">
+            Browse all registered clients and their legal issues.
+        </p>
+
+        <a href="{% url 'client_list' %}">
+            <button>Clients</button>
+        </a>
+    </div>
+
+    <div class="card" style="width:300px;">
+        <h3>View Lawyers</h3>
+
+        <p style="margin:15px 0;">
+            Browse all registered lawyers.
+        </p>
+
+        <a href="{% url 'lawyer_list' %}">
+            <button>Lawyers</button>
+        </a>
+    </div>
+
+</div>
+
+<hr style="margin:40px 0;">
+
+<h2>System Features</h2>
+
+<ul style="margin-top:20px; line-height:2;">
+    <li>Register clients.</li>
+    <li>Register lawyers.</li>
+    <li>A client may create multiple legal issues.</li>
+    <li>Each issue stores its own discussion history.</li>
+    <li>Lawyers can communicate with clients through chat.</li>
+    <li>All conversations remain attached to their corresponding issue.</li>
+</ul>
+
+{% endblock %}

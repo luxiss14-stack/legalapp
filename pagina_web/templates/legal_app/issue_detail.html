@@ -1,0 +1,85 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+{{ issue.title }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ issue.title }}</h1>
+
+<div class="card">
+
+    <h3>Client Information</h3>
+
+    <p>
+        <strong>Name:</strong>
+        {{ issue.client.name }}
+    </p>
+
+    <p>
+        <strong>Phone:</strong>
+        {{ issue.client.phone }}
+    </p>
+
+    <p>
+        <strong>Email:</strong>
+        {{ issue.client.email }}
+    </p>
+
+</div>
+
+<div class="card">
+
+    <h3>Issue Description</h3>
+
+    <p>{{ issue.description }}</p>
+
+    <p style="margin-top:20px;">
+        <strong>Submitted:</strong>
+        {{ issue.created_at }}
+    </p>
+
+</div>
+
+<hr>
+
+<h2>Chat</h2>
+
+{% if messages %}
+
+    <p>
+        There are {{ messages|length }} message(s) in this conversation.
+    </p>
+
+{% else %}
+
+    <p>
+        No messages have been sent yet.
+    </p>
+
+{% endif %}
+
+<br>
+
+{% if messages %}
+
+    <a href="{% url 'client_chat' issue.id %}">
+        <button>Open Chat</button>
+    </a>
+
+{% else %}
+
+    <p>
+        A lawyer must initiate the conversation before the client can access the chat.
+    </p>
+
+{% endif %}
+
+<br><br>
+
+<a href="{% url 'client_detail' issue.client.id %}">
+    <button>Back to Client</button>
+</a>
+
+{% endblock %}

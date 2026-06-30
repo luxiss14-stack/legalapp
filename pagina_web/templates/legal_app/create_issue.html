@@ -1,0 +1,37 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+Create Issue
+{% endblock %}
+
+{% block content %}
+
+<h1>Create a New Legal Issue</h1>
+
+<p style="margin:20px 0;">
+    <strong>Client:</strong> {{ client.name }}
+</p>
+
+<div class="card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Submit Issue
+        </button>
+
+    </form>
+
+</div>
+
+<br>
+
+<a href="{% url 'client_detail' client.id %}">
+    <button>Cancel</button>
+</a>
+
+{% endblock %}

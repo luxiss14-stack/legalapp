@@ -1,0 +1,55 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+Lawyers
+{% endblock %}
+
+{% block content %}
+
+<h1>Registered Lawyers</h1>
+
+<p style="margin:20px 0;">
+    Below is the list of all registered lawyers in the system.
+</p>
+
+<table>
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for lawyer in lawyers %}
+
+        <tr>
+            <td>{{ lawyer.name }}</td>
+            <td>{{ lawyer.phone }}</td>
+            <td>{{ lawyer.email }}</td>
+        </tr>
+
+    {% empty %}
+
+        <tr>
+            <td colspan="3">
+                No lawyers have been registered yet.
+            </td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<br>
+
+<a href="{% url 'register_lawyer' %}">
+    <button>Register New Lawyer</button>
+</a>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+Case Chat
+{% endblock %}
+
+{% block content %}
+
+<h1>Case Chat</h1>
+
+<div class="card">
+
+    <h3>{{ issue.title }}</h3>
+
+    <p>
+        <strong>Client:</strong>
+        {{ issue.client.name }}
+    </p>
+
+    {% if lawyer %}
+    <p>
+        <strong>Lawyer:</strong>
+        {{ lawyer.name }}
+    </p>
+    {% endif %}
+
+</div>
+
+<div class="chat-box">
+
+    {% for message in messages %}
+
+        {% if message.sent_by_lawyer %}
+
+            <div class="lawyer">
+
+                <strong>{{ message.lawyer.name }}</strong>
+
+                <br><br>
+
+                {{ message.message }}
+
+                <br><br>
+
+                <small>{{ message.created_at }}</small>
+
+            </div>
+
+        {% else %}
+
+            <div class="client">
+
+                <strong>{{ message.client.name }}</strong>
+
+                <br><br>
+
+                {{ message.message }}
+
+                <br><br>
+
+                <small>{{ message.created_at }}</small>
+
+            </div>
+
+        {% endif %}
+
+    {% empty %}
+
+        <p>No messages yet.</p>
+
+    {% endfor %}
+
+</div>
+
+<hr>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Send Message
+    </button>
+
+</form>
+
+<br>
+
+{% if issue.client %}
+
+<a href="{% url 'issue_detail' issue.id %}">
+    <button>
+        Back to Issue
+    </button>
+</a>
+
+{% endif %}
+
+{% endblock %}

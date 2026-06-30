@@ -1,0 +1,33 @@
+{% extends "legal_app/base.html" %}
+
+{% block title %}
+Register Lawyer
+{% endblock %}
+
+{% block content %}
+
+<h1>Lawyer Registration</h1>
+
+<p style="margin:20px 0;">
+    Complete the following form to register a new lawyer.
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Register Lawyer
+    </button>
+
+</form>
+
+<hr style="margin:40px 0;">
+
+<a href="{% url 'lawyer_list' %}">
+    ← Back to Lawyers
+</a>
+
+{% endblock %}
