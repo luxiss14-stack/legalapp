@@ -102,10 +102,13 @@
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
-                            <a class="dropdown-item" href="{% url 'logout' %}">
+                          <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">
                                 <i class="bi bi-box-arrow-right"></i>
                                 Logout
-                            </a>
+                            </button>
+                          </form>
                         </li>
 
                     </ul>

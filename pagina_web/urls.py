@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
+from .forms import LoginForm
 
 urlpatterns = [
     # Home
@@ -56,5 +58,25 @@ urlpatterns = [
         "issue/<int:issue_id>/chat/client/",
         views.client_chat,
         name="client_chat",
+    ),
+    path(
+        "chat/<int:issue_id>/send/",
+        views.send_chat_message,
+        name="send_chat_message",
+    ),
+    path(
+        "login/",
+        auth_views.LoginView.as_view(
+            template_name="pagina_web/login.html",
+            authentication_form=LoginForm,
+            redirect_authenticated_user=True,
+        ),
+        name="login",
+    ),
+
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(),
+        name="logout",
     ),
 ]

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Client(models.Model):
     name = models.CharField(max_length=150)
@@ -11,9 +11,36 @@ class Client(models.Model):
 
 
 class Lawyer(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="lawyer_profile"
+    )
     name = models.CharField(max_length=150)
     phone = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
+
+    gps_location = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="Example: 9.9281, -84.0907"
+    )
+    webpage = models.URLField(
+        blank=True,
+        null=True
+    )
+    carne = models.CharField(
+        max_length=100,
+        unique=True,
+        blank=True,
+    )
+    photo = models.ImageField(
+        upload_to="lawyer_photos/",
+        blank=True,
+        null=True,
+
+    )
 
     def __str__(self):
         return self.name
@@ -39,20 +66,18 @@ class ChatMessage(models.Model):
         on_delete=models.CASCADE,
         related_name="messages"
     )
-    lawyer = models.ForeignKey(
-        Lawyer,
+
+    sender = models.ForeignKey(
+        User,
         on_delete=models.CASCADE,
-        related_name="messages"
+        related_name="sent_messages"
     )
-    client = models.ForeignKey(
-        Client,
-        on_delete=models.CASCADE,
-        related_name="messages"
-    )
+
     message = models.TextField()
-    sent_by_lawyer = models.BooleanField(default=True)
+
+    is_read = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        sender = "Lawyer" if self.sent_by_lawyer else "Client"
-        return f"{sender}: {self.message[:40]}"
+    class Meta:
+        ordering = ["created_at"]

@@ -1,0 +1,105 @@
+<div id="chat-widget" class="position-fixed bottom-0 end-0 m-4" style="z-index: 1050; width: 350px;">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+
+            <span>
+                Chat
+                {% if unread_messages_count %}
+                    <span class="badge bg-danger ms-2">
+                        {{ unread_messages_count }}
+                    </span>
+                {% endif %}
+            </span>
+
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-light"
+                onclick="toggleChatWidget()">
+                —
+            </button>
+
+        </div>
+
+        <div id="chat-body" class="card-body">
+
+            {% if chat_issue %}
+
+                <h6 class="fw-bold">
+                    {{ chat_issue.title }}
+                </h6>
+
+                <div
+                    class="border rounded p-2 mb-3"
+                    style="height: 250px; overflow-y: auto;">
+
+                    {% for message in chat_messages %}
+
+                        <div class="mb-2">
+
+                            <small class="text-muted">
+                                {{ message.sender.username }} · {{ message.created_at }}
+                            </small>
+
+                            <div class="p-2 rounded bg-light">
+                                {{ message.message }}
+                            </div>
+
+                        </div>
+
+                    {% empty %}
+
+                        <p class="text-muted">
+                            No messages yet.
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+                <form method="POST" action="{% url 'send_chat_message' chat_issue.id %}">
+
+                    {% csrf_token %}
+
+                    <textarea
+                        name="message"
+                        class="form-control mb-2"
+                        rows="2"
+                        placeholder="Write a message..."
+                        required></textarea>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        Send
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <p class="text-muted mb-0">
+                    No active chat selected.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function toggleChatWidget() {
+        const chatBody = document.getElementById("chat-body");
+        const chatWidget = document.getElementById("chat-widget");
+
+        if (chatBody.style.display === "none") {
+            chatBody.style.display = "block";
+            chatWidget.style.width = "350px";
+        } else {
+            chatBody.style.display = "none";
+            chatWidget.style.width = "250px";
+        }
+    }
+</script>

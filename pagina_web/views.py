@@ -9,7 +9,7 @@ from .forms import (
 
 
 def home(request):
-    return render(request, "legal_app/home.html")
+    return render(request, "pagina_web/home.html")
 
 
 # -------------------------
@@ -28,10 +28,25 @@ def register_client(request):
 
     return render(
         request,
-        "legal_app/register_client.html",
+        "pagina_web/register_client.html",
         {"form": form},
     )
 
+
+def home(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    if request.user.is_staff:
+        return redirect("client_list")
+
+    if hasattr(request.user, "lawyer_profile"):
+        return redirect("lawyer_list")
+
+    if hasattr(request.user, "client_profile"):
+        return redirect("client_detail", request.user.client_profile.id)
+
+    return redirect("login")
 
 # -------------------------
 # Lawyer Registration
@@ -49,7 +64,7 @@ def register_lawyer(request):
 
     return render(
         request,
-        "legal_app/register_lawyer.html",
+        "pagina_web/register_lawyer.html",
         {"form": form},
     )
 
@@ -62,7 +77,7 @@ def client_list(request):
 
     return render(
         request,
-        "legal_app/client_list.html",
+        "pagina_web/client_list.html",
         {"clients": clients},
     )
 
@@ -72,7 +87,7 @@ def lawyer_list(request):
 
     return render(
         request,
-        "legal_app/lawyer_list.html",
+        "pagina_web/lawyer_list.html",
         {"lawyers": lawyers},
     )
 
@@ -98,7 +113,7 @@ def create_issue(request, client_id):
 
     return render(
         request,
-        "legal_app/create_issue.html",
+        "pagina_web/create_issue.html",
         {
             "client": client,
             "form": form,
@@ -111,7 +126,7 @@ def client_detail(request, client_id):
 
     return render(
         request,
-        "legal_app/client_detail.html",
+        "pagina_web/client_detail.html",
         {
             "client": client,
             "issues": client.issues.all(),
@@ -124,7 +139,7 @@ def issue_detail(request, issue_id):
 
     return render(
         request,
-        "legal_app/issue_detail.html",
+        "pagina_web/issue_detail.html",
         {
             "issue": issue,
             "messages": issue.messages.order_by("created_at"),
@@ -161,7 +176,7 @@ def lawyer_chat(request, issue_id, lawyer_id):
 
     return render(
         request,
-        "legal_app/chat.html",
+        "pagina_web/chat.html",
         {
             "issue": issue,
             "lawyer": lawyer,
@@ -192,7 +207,7 @@ def client_chat(request, issue_id):
 
     return render(
         request,
-        "legal_app/chat.html",
+        "pagina_web/chat.html",
         {
             "issue": issue,
             "lawyer": issue.messages.first().lawyer if issue.messages.exists() else None,
@@ -200,3 +215,32 @@ def client_chat(request, issue_id):
             "form": form,
         },
     )
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from .models import Issue, ChatMessage
+
+
+@login_required
+def send_chat_message(request, issue_id):
+    issue = get_object_or_404(Issue, pk=issue_id)
+
+    # Only the client assigned to the issue or the assigned lawyer may chat
+    if (
+        request.user != issue.client.user and
+        (issue.lawyer is None or request.user != issue.lawyer.user)
+    ):
+        return redirect("home")
+
+    if request.method == "POST":
+        message = request.POST.get("message", "").strip()
+
+        if message:
+            ChatMessage.objects.create(
+                issue=issue,
+                sender=request.user,
+                message=message,
+            )
+
+    return redirect("issue_detail", issue_id=issue.id)
